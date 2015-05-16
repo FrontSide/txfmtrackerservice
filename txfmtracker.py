@@ -35,8 +35,5 @@ def now_playing():
 
     return {"title": title, "artist": artist}
 
-sm = StorageManager()
-
-# Update
-sm.add_song(now_playing())
-
+if __name__ == "__main__":
+    StorageManager().add_song(now_playing())
