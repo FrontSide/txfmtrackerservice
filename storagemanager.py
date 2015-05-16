@@ -28,9 +28,7 @@ class StorageManager:
         for t in self._get_all_times():
             # Return the song with the first time that is equal to or smaller than the given
             if strptime(t, "%Y.%m.%d %H:%M:%S") <= strptime(time, "%Y.%m.%d %H:%M:%S"):
-                return self._get_stored(hashname=t)
-        
-            
+                return {t: self._get_stored(hashname=t)}
 
     def add_song(self, song):
         
