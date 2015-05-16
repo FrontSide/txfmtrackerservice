@@ -1,6 +1,10 @@
 #TXFM Trackservice
 
-A script that returns the name of the Song that is currently played (or was last played) on the Irish Independent Radio TXFM!
+A tiny app with which the Songs played on the Irish Independent Radio TXFM Dublin (105.2) can be tracked.
+
+######Built with Python and Redis.
+
+---
 
 ## API
 
@@ -20,7 +24,7 @@ For adding the currently played song to the DB call
 
 For retrieving the song played at a certain time call (watch the formatting)
 
-     sm.get_song(date="%Y.%m.%d %H:%M:%S")
+     sm.get_song(time="%Y.%m.%d %H:%M:%S")
 
 For retrieving a dictionary of all stored songs call
 
