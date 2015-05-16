@@ -1,7 +1,7 @@
 #!./bin/python3
 
 """
-TXFMTrackerService
+TXFMTrackService
 (C) 2015
 David Rieger
 """
@@ -10,6 +10,7 @@ import urllib.request
 import json
 from html.parser import HTMLParser
 from bs4 import BeautifulSoup
+from storagemanager import StorageManager
 
 def now_playing():    
    
@@ -24,9 +25,18 @@ def now_playing():
     # The tag where the songname is in doesn't have an id so
     # let's keep our fingers crossed that this will work for a while...
     nowplaying = htmlsoup.find_all("h2", class_="tName white")[0].text
-    artist = nowplaying.split("-")[0].strip()
-    song = nowplaying.split("-")[1].strip()
+    
+    try:
+        artist = nowplaying.split("-")[0].strip()
+        title = nowplaying.split("-")[1].strip()
+    except IndexError:
+        artist = ""
+        title = nowplaying
 
-    return song, artist
+    return {"title": title, "artist": artist}
 
-print(now_playing())
+sm = StorageManager()
+
+# Update
+sm.add_song(now_playing())
+
