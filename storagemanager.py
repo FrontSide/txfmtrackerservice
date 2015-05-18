@@ -10,6 +10,7 @@ import redis
 from time import gmtime, strftime, strptime
 import hashlib
 
+
 class StorageManager:
 
     TIMES_KEY = "times"
@@ -27,46 +28,47 @@ class StorageManager:
 
         for t in self._get_all_times():
             # Return the song with the first time that is equal to or smaller than the given
-            if strptime(t, "%Y.%m.%d %H:%M:%S") <= strptime(time, "%Y.%m.%d %H:%M:%S"):
+            if strptime(t, "%d.%m.%Y %H:%M:%S") <= strptime(time, "%d.%m.%Y %H:%M:%S"):
                 return {t: self._get_stored(hashname=t)}
 
     def add_song(self, song):
-        
-        c_time = strftime("%Y.%m.%d %H:%M:%S", gmtime())
+
+        c_time = strftime("%d.%m.%Y %H:%M:%S", gmtime())
 
         to_store = {
             "title": song["title"],
             "artist": song["artist"]
-        }
+            }
 
-        # Check if the song that is stored as "currently playing" 
+        # Check if the song that is stored as "currently playing"
         # is the same as the one just fetched
         songhash = StorageManager.song_to_hash(song["title"], song["artist"])
-    
+
         try:
             playing_song = self._get_stored()
+            playing_song_hash = StorageManager.song_to_hash(playing_song["title"], playing_song["artist"])
         except IndexError:
-            playing_song = False        
+            playing_song = False
 
-        # If registered song is not the song just fetched store it 
-        if (not playing_song) or (songhash != StorageManager.song_to_hash(playing_song["title"], playing_song["artist"])):
+        # If registered song is not the song just fetched store it
+        if (not playing_song) or (songhash != playing_song_hash):
             self.storage.lpush(self.TIMES_KEY, c_time)
             self.storage.hmset(c_time, to_store)
-        
+
     def _get_all_times(self):
         """
         Returns the list of all times for which a song is stored
-        """   
+        """
         return [ti.decode("UTF-8") for ti in self.storage.lrange(self.TIMES_KEY, start=0, end=-1)]
-    
+
     def _get_stored(self, hashname=None):
         """
         Returns the song that is stored with >hashname
         by default i.e if no hashname given, the last song stored is returned (which is the song currently playing)
         """
         if hashname is None:
-            hashname = self._get_all_times()[0] # Index 0 is the time for the last song stored
-        return {k.decode("UTF-8"): v.decode("UTF-8") for (k,v) in self.storage.hgetall(hashname).items()}
+            hashname = self._get_all_times()[0]  # Index 0 is the time for the last song stored
+        return {k.decode("UTF-8"): v.decode("UTF-8") for (k, v) in self.storage.hgetall(hashname).items()}
 
     def get_all_stored(self):
         """
