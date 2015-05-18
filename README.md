@@ -24,7 +24,7 @@ For adding the currently played song to the DB call
 
 For retrieving the song played at a certain time call (watch the formatting)
 
-     sm.get_song(time="%Y.%m.%d %H:%M:%S")
+     sm.get_song(time="%d.%m.%Y %H:%M:%S")
 
 For retrieving a dictionary of all stored songs call
 
@@ -38,4 +38,4 @@ For retrieving all the songs stored call
 
 For a song at a certain time call (watch formatting)
 
-    /get/%Y.%m.%d %H:%M:%S
+    /get/%d.%m.%Y %H:%M:%S
