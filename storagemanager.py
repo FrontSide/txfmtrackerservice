@@ -10,6 +10,7 @@ import redis
 from time import gmtime, strftime, strptime
 from collections import OrderedDict
 import hashlib
+from datetime import datetime, timedelta
 
 
 class StorageManager:
@@ -47,7 +48,7 @@ class StorageManager:
 
     def add_song(self, song):
 
-        c_time = strftime("%d.%m.%Y %H:%M:%S", gmtime())
+        c_time = (datetime.utcnow() + timedelta(hours=1)).strftime("%d.%m.%Y %H:%M:%S")
 
         to_store = {
             "title": song["title"],
