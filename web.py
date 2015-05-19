@@ -1,4 +1,4 @@
-#!./bin/python3
+#!/usr/bin/python3
 
 """
 TXFMTrackService
@@ -11,13 +11,13 @@ from storagemanager import StorageManager
 sm = StorageManager()
 
 
-@route('/get/all')
+@route('/api/get/all')
 def get_all_songs():
     response.headers['Access-Control-Allow-Origin'] = '*'
     return sm.get_all_stored()
 
 
-@route('/get/<time>')
+@route('/api/get/<time>')
 def get_song(time):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return sm.get_song(time)
