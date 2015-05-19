@@ -8,6 +8,7 @@ David Rieger
 
 import redis
 from time import gmtime, strftime, strptime
+from collections import OrderedDict
 import hashlib
 
 
@@ -20,16 +21,29 @@ class StorageManager:
 
     def get_song(self, time=None):
         """
-        Returns the song that was played at a certain time
+        Returns the songs that were played arount the given time sorted by time
         or the one that is currently plyed if no time given
         """
         if time is None:
             return self._get_stored()
 
         for t in self._get_all_times():
-            # Return the song with the first time that is equal to or smaller than the given
+            SCOPE = 5
+            # Return the songs that was played is closest but before or exactly to/at the given time
+            # and the numer of SCOPE songs before and after this one
             if strptime(t, "%d.%m.%Y %H:%M:%S") <= strptime(time, "%d.%m.%Y %H:%M:%S"):
-                return {t: self._get_stored(hashname=t)}
+
+                # index of this time in the list
+                _idx = self._get_all_times().index(t)
+
+                _songs = OrderedDict()
+                for _timekey in self._get_all_times()[_idx-SCOPE:_idx+SCOPE]:
+                    try:
+                        _songs[_timekey] = self._get_stored(hashname=_timekey)
+                    except IndexError:
+                        pass
+
+                return _songs
 
     def add_song(self, song):
 
@@ -72,9 +86,9 @@ class StorageManager:
 
     def get_all_stored(self):
         """
-        Returns all stored songs
+        Returns all stored songs sorted by time
         """
-        _all_songs = dict()
+        _all_songs = OrderedDict()
         for t in self._get_all_times():
             _all_songs[t] = self._get_stored(t)
         return _all_songs

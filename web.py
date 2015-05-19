@@ -11,6 +11,7 @@ from storagemanager import StorageManager
 
 sm = StorageManager()
 
+
 @route('/api/get/all')
 def get_all_songs():
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -23,3 +24,6 @@ def get_song(time):
     return sm.get_song(time)
 
 app = bottle.default_app()
+
+if __name__ == '__main__':
+    run(host="localhost", port=8080)
