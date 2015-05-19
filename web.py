@@ -5,11 +5,11 @@ TXFMTrackService
 (C) 2015
 David Rieger
 """
+import bottle
 from bottle import route, run, response
 from storagemanager import StorageManager
 
 sm = StorageManager()
-
 
 @route('/api/get/all')
 def get_all_songs():
@@ -22,4 +22,4 @@ def get_song(time):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return sm.get_song(time)
 
-run(host='localhost', port=8384)
+app = bottle.default_app()
