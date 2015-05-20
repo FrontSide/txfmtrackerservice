@@ -24,11 +24,14 @@ def now_playing():
 
     # The tag where the songname is in doesn't have an id so
     # let's keep our fingers crossed that this will work for a while...
-    nowplaying = htmlsoup.find_all("h2", class_="tName white")[0].text
+    try:
+        nowplaying = htmlsoup.find_all("img", class_="tNowImg")[0]["title"]
+    except IndexError:
+        nowplaying = htmlsoup.find_all("h2", class_="tName white")[0].text
 
     try:
-        artist = nowplaying.split("-")[0].strip()
-        title = nowplaying.split("-")[1].strip()
+        artist = nowplaying.split(" - ")[0].strip()
+        title = nowplaying.split(" - ")[1].strip()
     except IndexError:
         artist = ""
         title = nowplaying
@@ -36,4 +39,5 @@ def now_playing():
     return {"title": title, "artist": artist}
 
 if __name__ == "__main__":
+    print(now_playing())
     StorageManager().add_song(now_playing())
