@@ -38,11 +38,15 @@ class StorageManager:
                 _idx = self._get_all_times().index(t)
 
                 _songs = OrderedDict()
-                for _timekey in self._get_all_times()[_idx-SCOPE:_idx+SCOPE]:
+
+                _start_idx = max(_idx-SCOPE, 0)
+                _end_idx = min(_idx+SCOPE, len(self._get_all_times())-1)
+
+                for _timekey in self._get_all_times()[_start_idx:_end_idx]:
                     try:
                         _songs[_timekey] = self._get_stored(hashname=_timekey)
                     except IndexError:
-                        pass
+                        continue
 
                 return _songs
 
