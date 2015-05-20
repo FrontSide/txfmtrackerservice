@@ -2,7 +2,7 @@
 
 A tiny app with which the Songs played on the Irish Independent Radio TXFM Dublin (105.2) can be tracked.
 
-# Live on [http://www.txfmtrack.com](www.txfmtrack.com)
+# Live on [www.txfmtrack.com](http://www.txfmtrack.com)
 
 ######Built with Python, Redis, bottle.py and BeautifulSoup.
 
