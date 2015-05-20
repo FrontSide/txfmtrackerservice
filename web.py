@@ -18,10 +18,16 @@ def get_all_songs():
     return sm.get_all_stored()
 
 
-@route('/api/get/<time>')
+@route('/api/get/time/<time>')
 def get_song(time):
     response.headers['Access-Control-Allow-Origin'] = '*'
-    return sm.get_song(time)
+    return sm.get_song(time=time)
+
+
+@route('/api/get/text/<text>')
+def get_song(text):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return sm.get_song(text=text)
 
 app = bottle.default_app()
 

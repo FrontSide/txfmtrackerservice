@@ -21,16 +21,19 @@ class StorageManager:
     def __init__(self, host="localhost", port="6379", db="0"):
         self.storage = redis.StrictRedis(host=host, port=port, db=db)
 
-    def get_song(self, time=None):
+    def get_song(self, time=None, text=None, scope=10):
         """
-        Returns the songs that were played arount the given time sorted by time
-        or the one that is currently plyed if no time given
+        Returns the [scope] songs that were played arount the given time sorted by time
+        or the songs that match [text] for either "title" or "artist"
+        or the [scope ]songs that were played most recently
         """
+        if text is not None and text.strip() is not False:
+            return self._get_stored_by_text(text)
+
         if time is None:
             return self._get_stored()
 
         for t in self._get_all_times():
-            SCOPE = 5
             # Return the songs that was played is closest but before or exactly to/at the given time
             # and the numer of SCOPE songs before and after this one
             if strptime(t, "%d.%m.%Y %H:%M:%S") <= strptime(time, "%d.%m.%Y %H:%M:%S"):
@@ -40,8 +43,8 @@ class StorageManager:
 
                 _songs = OrderedDict()
 
-                _start_idx = max(_idx-SCOPE, 0)
-                _end_idx = min(_idx+SCOPE, len(self._get_all_times())-1)
+                _start_idx = max(_idx-int((scope/2)), 0)
+                _end_idx = min(_idx+int((scope/2)), len(self._get_all_times())-1)
 
                 for _timekey in self._get_all_times()[_start_idx:_end_idx]:
                     try:
@@ -90,14 +93,26 @@ class StorageManager:
             hashname = self._get_all_times()[0]  # Index 0 is the time for the last song stored
         return {k.decode("UTF-8"): v.decode("UTF-8") for (k, v) in self.storage.hgetall(hashname).items()}
 
-    def get_all_stored(self):
+    def get_all_stored(self, amount=10):
         """
-        Returns all stored songs sorted by time
+        Returns the latest [amount] stored songs, sorted by time
         """
         _all_songs = OrderedDict()
-        for t in self._get_all_times():
+
+        _end_idx = min(amount, len(self._get_all_times())-1)
+        for t in self._get_all_times()[0:_end_idx]:
             _all_songs[t] = self._get_stored(t)
+
         return _all_songs
+
+    def _get_stored_by_text(self, text):
+        "Returns all songs that match [text] for either title or artist"
+        _all_songs = self.get_all_stored(amount=len(self._get_all_times()))
+        _result = OrderedDict()
+        for k, v in _all_songs.items():
+            if (v["title"] + v["artist"]).replace(" ", "").lower().find(text.replace(" ", "").lower()) != -1:
+                _result[k] = v
+        return _result
 
     def song_to_hash(title, artist):
         return hashlib.md5("{}{}".format(title, artist).encode()).hexdigest()
