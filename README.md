@@ -2,7 +2,7 @@
 
 A tiny app with which the Songs played on the Irish Independent Radio TXFM Dublin (105.2) can be tracked.
 
-# Live on [www.txfmtrack.com](www.txfmtrack.com)
+# Live on [http://www.txfmtrack.com](www.txfmtrack.com)
 
 ######Built with Python, Redis, bottle.py and BeautifulSoup.
 
@@ -49,13 +49,17 @@ For adding the currently played song to the DB call
 
      sm.add_song(now_playing())
 
-For retrieving the songs played around a certain time call (watch the formatting)
+For retrieving [n] songs played around a certain time call (watch the formatting) (n=10 by default)
 
-     sm.get_song(time="%d.%m.%Y %H:%M:%S")
+     sm.get_song(time="%d.%m.%Y %H:%M:%S", scope=n)
+     
+For retrieving all songs that match [string] call
 
-For retrieving a dictionary of all stored songs call
+     sm.get_song(text=string)
 
-     sm.get_all_songs()
+For retrieving a dictionary of the latest [n] stored songs call
+
+     sm.get_all_songs(amount=n)
 
 ## ReST API
 
@@ -65,4 +69,8 @@ For retrieving all the songs stored call
 
 For a couple of songs around a certain time call (watch formatting)
 
-    /api/get/%d.%m.%Y %H:%M:%S
+    /api/get/time/%d.%m.%Y %H:%M:%S
+    
+For all songs that match [text] call
+
+    /api/get/text/[text]
