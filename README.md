@@ -10,19 +10,17 @@ A tiny app with which the Songs played on the Irish Independent Radio TXFM Dubli
 
 ## Recommended/Tested Setup
 
-- Start a redis server on localhost with default port **6379**
+Start a redis server on localhost with default port **6379**
 
-- Run the main file as cronjob (best every 1-3 minutes since the average song is around 4 minutes)
-
+Run the main file as cronjob (best every 1-3 minutes since the average song is around 4 minutes)
 
     ./txfmtracker.py
 
-- Start the HTTP ReST interface with a WSGI server like **gunicorn**
-
+Start the HTTP ReST interface with a WSGI server like **gunicorn**<br>
 
      gunicorn -w 4 -b 127.0.0.1:8384 web:app &
 
-- Link your webserver to the web interface on port **8384**
+Link your webserver to the web interface on port **8384**
 
 ######Optionally:
 
