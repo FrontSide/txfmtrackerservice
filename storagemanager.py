@@ -11,6 +11,7 @@ from time import gmtime, strftime, strptime
 from collections import OrderedDict
 import hashlib
 from datetime import datetime, timedelta
+from pytz import timezone
 
 
 class StorageManager:
@@ -52,7 +53,7 @@ class StorageManager:
 
     def add_song(self, song):
 
-        c_time = (datetime.utcnow() + timedelta(hours=1)).strftime("%d.%m.%Y %H:%M:%S")
+        c_time = datetime.now(timezone("Europe/Dublin")).strftime("%d.%m.%Y %H:%M:%S")
 
         to_store = {
             "title": song["title"],
