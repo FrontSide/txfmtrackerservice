@@ -7,10 +7,10 @@ David Rieger
 """
 
 import redis
-from time import gmtime, strftime, strptime
+from time import strptime
 from collections import OrderedDict
 import hashlib
-from datetime import datetime, timedelta
+from datetime import datetime
 from pytz import timezone
 from persistence import Persistence
 
@@ -79,6 +79,12 @@ class StorageManager:
 
         # If registered song is not the song just fetched store it
         if (not playing_song) or (songhash != playing_song_hash):
+
+            # Also first remove the song that has been the "playing_song"
+            # from the storage if it was a TXFM Show rather than an actual song
+            if playing_song["title"].strip().lower().startswith("txfm ") and not playing_song["artist"].strip():
+                self.storage.delete(self.storage.lpop(self.TIMES_KEY))
+
             self.storage.lpush(self.TIMES_KEY, c_time)
             self.storage.hmset(c_time, to_store)
 
