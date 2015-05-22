@@ -26,6 +26,7 @@ class Cache:
         # from the storage if it was a TXFM Show rather than an actual song
         last_song = self.get_latest_songs(1)
         ignore_pattern = re.compile("((nialler9[\s]?.*)|(txfm[\s]?.*))")
+
         if ignore_pattern.match(last_song["title"].strip().lower()) and not last_song["artist"].strip():
             self.storage.delete(self.storage.lpop(self.TIMES_KEY))
 
@@ -108,10 +109,26 @@ class Cache:
                 _result[k] = v
         return _result
 
+    def remove_song(self, time):
+        """
+        removes [time] from the list of times and the accoring song from the cache
+        """
+        self.storage.lrem(self.TIMES_KEY, count=1, value=time)
+        self.storage.delete(time)
+
 
 class Persistence:
 
     def __init__(self, host="localhost", port=6380, dbname="txfmstore"):
         self.db = MongoClient(host, port)[dbname]
-        self.col_times = self.db.times
         self.col_songs = self.db.songs
+
+    def add_song(self, song, time):
+        song["_id"] = time
+        self.col_songs.insert_one(song)
+
+    def is_stored(self, time):
+        _res = self.col_songs.find_one({"_id": time})
+        if _res is None:
+            return False
+        return True

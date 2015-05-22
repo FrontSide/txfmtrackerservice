@@ -4,13 +4,15 @@ A tiny app with which the Songs played on the Irish Independent Radio TXFM Dubli
 
 # Live on [www.txfmtrack.com](http://www.txfmtrack.com)
 
-######Built with Python, Redis, bottle.py and BeautifulSoup.
+######Built with Python, Redis, MongoDB, bottle.py and BeautifulSoup.
 
 ---
 
 ## Recommended/Tested Setup
 
 Start a redis server on localhost with default port **6379**
+
+Start a mongodb server on localhost with port **6380**
 
 Run the main file as cronjob (best every 1-3 minutes since the average song is around 4 minutes)
 
@@ -38,22 +40,32 @@ from the *txfmtracker.py* module
 
 ---
 
-For storing things to the Redis-DB first create a StorageManager object
+### Storing in-Memory and on the FS
+
+The storage system utilises - per default - a Redis im-MemoryDB and a MongoDB  instance fot persisting things on the file system. This way Most recent Songs can be accessed quickly but the memory can be releieved from older ones.
+
+If you want to swap either of the technologies check out **sorageadapter.py**
+
+If you want to change the storagemechanism completely (e.g. redefine when songs are moved from cache to persisten, or removing the cache comletely) check out **storagemanager.py**
+
+---
+
+For storing things, first create a StorageManager object
 
      from storagemanager import StorageManager
      sm = StorageManager()
 
 For adding the currently played song to the DB call
 
-     sm.add_song(now_playing())
+     sm.add_songs(now_playing())
 
 For retrieving [n] songs played around a certain time call (watch the formatting) (n=10 by default)
 
-     sm.get_song(time="%d.%m.%Y %H:%M:%S", scope=n)
+     sm.get_songs(time="%d.%m.%Y %H:%M:%S", scope=n)
 
 For retrieving all songs that match [string] call
 
-     sm.get_song(text=string)
+     sm.get_songs(text=string)
 
 For retrieving a dictionary of the latest [n] stored songs call
 
