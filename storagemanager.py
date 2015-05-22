@@ -7,6 +7,7 @@ David Rieger
 """
 
 import hashlib
+from collections import OrderedDict
 from datetime import datetime
 from pytz import timezone
 from storageadapter import Cache, Persistence
@@ -19,20 +20,44 @@ class StorageManager:
         self.persistence = Persistence()
         self.MAX_NUM_IN_CACHE = 50
 
-    def get_songs(self, time=None, text=None, scope=50):
+    def get_songs(self, time=None, text=None, scope=50, cache_only=True):
         """
         Returns the songs that were played arount the given [time] sorted by time
         or the songs that match [text]
         or the [scope] songs that were played most recently is time is ::None::
+
+        If [cache_only] is activated. Only the in-Memory DB i.e. Cache will be browsed
         """
 
         if time:
-            return self.cache.get_songs_by_time(req_time=time, scope=scope)
+            _cached = self.cache.get_songs_by_time(req_time=time, scope=scope)
+
+            if cache_only:
+                return _cached
+
+            _persistence = self.persistence.get_songs_by_time(req_time=time, scope=scope)
+            _pers_keys = [t for t in _persistence.keys() if t not in _cached.keys()]
+
+            _all = OrderedDict()
+            # Go through all keys (sorted)
+            for k in sorted((list(_cached.keys()) + _pers_keys)):
+                if k in _cached.keys():
+                    _all[k] = _cached[k]
+                elif k in _pers_keys:
+                    _all[k] = _persistence[k]
+            return _all
 
         if text is None or not text.strip():
             return self.cache.get_latest_songs(amount=scope)
 
-        return self.cache.get_songs_by_text(text=text)
+        # Textsearch
+        _cached = self.cache.get_songs_by_text(text=text)
+        if cache_only:
+            return _cached
+
+        # TODO :::: TEXTSEARCH
+
+        return self.persistence.get_songs_by_text(text=text)
 
     def add_song(self, song):
         """

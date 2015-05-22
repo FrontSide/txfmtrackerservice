@@ -21,13 +21,25 @@ def get_all_songs():
 @route('/api/get/time/<time>')
 def get_song(time):
     response.headers['Access-Control-Allow-Origin'] = '*'
-    return sm.get_songs(time=time)
+    return sm.get_songs(time=time, scope=20)
 
 
 @route('/api/get/text/<text>')
 def get_song(text):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return sm.get_songs(text=text)
+
+
+@route('/api/full/time/<time>')
+def get_song(time):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return sm.get_songs(time=time, scope=20, cache_only=False)
+
+
+@route('/api/full/text/<text>')
+def get_song(text):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return sm.get_songs(text=text, cache_only=False)
 
 app = bottle.default_app()
 

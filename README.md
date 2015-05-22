@@ -73,14 +73,24 @@ For retrieving a dictionary of the latest [n] stored songs call
 
 ## ReST API
 
-For retrieving all the songs stored call
+For retrieving all the songs stored (cache only)
 
     /api/get/all
 
-For a couple of songs around a certain time call (watch formatting)
+For a couple of songs around a certain time call (watch formatting!) (cache only) (quick)
 
     /api/get/time/[%d.%m.%Y %H:%M:%S]
 
-For all songs that match [text] call
+
+As above but with persistent storage included (slower)
+
+    /api/full/time/[%d.%m.%Y %H:%M:%S]
+
+For all songs that match [text] call (cache only) (quick)
 
     /api/get/text/[text]
+
+
+As above but with persistent storage included (slower)
+
+    /api/full/text/[text]

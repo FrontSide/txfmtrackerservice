@@ -132,3 +132,24 @@ class Persistence:
         if _res is None:
             return False
         return True
+
+    def get_songs_by_time(self, req_time, scope=30):
+
+        for t in self.get_all_times():
+            if t > req_time:
+                continue
+
+            # index of this time in the list
+            _idx = self.get_all_times().index(t)
+
+            _start_idx = max(_idx-int((scope/2)), 0)
+            _end_idx = min(_idx+int((scope/2)), len(self.get_all_times())-1)
+
+            _songs = OrderedDict()
+            for _timekey in self.get_all_times()[_start_idx:_end_idx]:
+                _songs[_timekey] = self.col_songs.find_one({"_id": t}, {"_id": False})
+
+            return _songs
+
+    def get_all_times(self):
+        return sorted([t["_id"] for t in self.col_songs.find({}, {"_id": True})])
