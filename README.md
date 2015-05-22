@@ -50,14 +50,14 @@ For adding the currently played song to the DB call
 For retrieving [n] songs played around a certain time call (watch the formatting) (n=10 by default)
 
      sm.get_song(time="%d.%m.%Y %H:%M:%S", scope=n)
-     
+
 For retrieving all songs that match [string] call
 
      sm.get_song(text=string)
 
 For retrieving a dictionary of the latest [n] stored songs call
 
-     sm.get_all_songs(amount=n)
+     sm.get_songs(scope=n)
 
 ## ReST API
 
@@ -67,8 +67,8 @@ For retrieving all the songs stored call
 
 For a couple of songs around a certain time call (watch formatting)
 
-    /api/get/time/%d.%m.%Y %H:%M:%S
-    
+    /api/get/time/[%d.%m.%Y %H:%M:%S]
+
 For all songs that match [text] call
 
     /api/get/text/[text]
