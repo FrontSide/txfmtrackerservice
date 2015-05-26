@@ -8,7 +8,7 @@ import redis
 import re
 from pymongo import MongoClient
 from collections import OrderedDict
-from time import strptime
+from time import strptime, strftime
 
 
 class Cache:
@@ -148,7 +148,7 @@ class Persistence:
     def get_songs_by_time(self, req_time, scope=30):
 
         for t in self.get_all_times():
-            if t > strptime(str(req_time), "%d.%m.%Y %H:%M:%S"):
+            if strptime(t, "%d.%m.%Y %H:%M:%S") > strptime(str(req_time), "%d.%m.%Y %H:%M:%S"):
                 continue
 
             # index of this time in the list
@@ -159,7 +159,7 @@ class Persistence:
 
             _songs = OrderedDict()
             for _timekey in self.get_all_times()[_start_idx:_end_idx]:
-                _songs[_timekey] = self.col_songs.find_one({"_id": t}, {"_id": False})
+                _songs[_timekey] = self.col_songs.find_one({"_id": _timekey}, {"_id": False})
 
             return _songs
 
@@ -168,5 +168,7 @@ class Persistence:
         Returns all times for which a song is stored
         Format is a time-object
         """
-        return sorted([strptime(t["_id"], "%d.%m.%Y %H:%M:%S")
-                      for t in self.col_songs.find({}, {"_id": True})], reverse=True)
+        _times = sorted([strptime(t["_id"], "%d.%m.%Y %H:%M:%S")
+                        for t in self.col_songs.find({}, {"_id": True})], reverse=True)
+
+        return [strftime("%d.%m.%Y %H:%M:%S", t) for t in _times]
