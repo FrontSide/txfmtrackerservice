@@ -163,4 +163,4 @@ class Persistence:
             return _songs
 
     def get_all_times(self):
-        return sorted([t["_id"] for t in self.col_songs.find({}, {"_id": True})])
+        return sorted([t["_id"] for t in self.col_songs.find({}, {"_id": True})], reverse=True)

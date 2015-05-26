@@ -65,7 +65,7 @@ class StorageManager:
 
         _all = OrderedDict()
         # Go through all keys (sorted)
-        for k in sorted(_cache_keys + _pers_keys):
+        for k in sorted(_cache_keys + _pers_keys, reverse=True):
             if k in _cache_keys:
                 _all[k] = _cached_songs[k]
             elif k in _pers_keys:
