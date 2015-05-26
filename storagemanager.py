@@ -35,29 +35,42 @@ class StorageManager:
             if cache_only:
                 return _cached
 
-            _persistence = self.persistence.get_songs_by_time(req_time=time, scope=scope)
-            _pers_keys = [t for t in _persistence.keys() if t not in _cached.keys()]
-
-            _all = OrderedDict()
-            # Go through all keys (sorted)
-            for k in sorted((list(_cached.keys()) + _pers_keys)):
-                if k in _cached.keys():
-                    _all[k] = _cached[k]
-                elif k in _pers_keys:
-                    _all[k] = _persistence[k]
-            return _all
+            return self._concatenate_results(_cached, self.persistence.get_songs_by_time(req_time=time, scope=scope))
 
         if text is None or not text.strip():
             return self.cache.get_latest_songs(amount=scope)
 
         # Textsearch
         _cached = self.cache.get_songs_by_text(text=text)
+
         if cache_only:
             return _cached
 
-        # TODO :::: TEXTSEARCH
+        return self._concatenate_results(_cached, self.persistence.get_songs_by_text(text=text))
 
-        return self.persistence.get_songs_by_text(text=text)
+    def _concatenate_results(self, _cached_songs, _persisted_songs):
+        """
+        Joins the result dictionaries from the cache and the persistent storage to one
+        ordered (by time) dict
+        """
+
+        try:
+            _cache_keys = list(_cached_songs.keys())
+        except AttributeError:
+            _cache_keys = []
+
+        _pers_keys = []
+        if _persisted_songs:
+            _pers_keys = [t for t in _persisted_songs.keys() if t not in _cache_keys]
+
+        _all = OrderedDict()
+        # Go through all keys (sorted)
+        for k in sorted(_cache_keys + _pers_keys):
+            if k in _cache_keys:
+                _all[k] = _cached_songs[k]
+            elif k in _pers_keys:
+                _all[k] = _persisted_songs[k]
+        return _all
 
     def add_song(self, song):
         """

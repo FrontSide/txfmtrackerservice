@@ -133,6 +133,17 @@ class Persistence:
             return False
         return True
 
+    def get_songs_by_text(self, text, scope=None):
+
+        _songs = OrderedDict()
+        for t in self.get_all_times():
+            s = self.col_songs.find_one({"_id": t}, {"_id": False})
+
+            if (s["title"] + s["artist"]).replace(" ", "").lower().find(text.replace(" ", "").lower()) != -1:
+                _songs[t] = s
+
+        return _songs
+
     def get_songs_by_time(self, req_time, scope=30):
 
         for t in self.get_all_times():
