@@ -147,7 +147,7 @@ class Persistence:
     def get_songs_by_time(self, req_time, scope=30):
 
         for t in self.get_all_times():
-            if t > req_time:
+            if strptime(t, "%d.%m.%Y %H:%M:%S") > strptime(str(req_time), "%d.%m.%Y %H:%M:%S"):
                 continue
 
             # index of this time in the list
