@@ -37,6 +37,7 @@ class Cache:
         """
         Returns the latest [amount] stored times
         All if [amount] is ::None::
+        Format is String
         """
         if amount is None:
             end_idx = -1
@@ -147,7 +148,7 @@ class Persistence:
     def get_songs_by_time(self, req_time, scope=30):
 
         for t in self.get_all_times():
-            if strptime(t, "%d.%m.%Y %H:%M:%S") > strptime(str(req_time), "%d.%m.%Y %H:%M:%S"):
+            if t > strptime(str(req_time), "%d.%m.%Y %H:%M:%S"):
                 continue
 
             # index of this time in the list
@@ -163,4 +164,9 @@ class Persistence:
             return _songs
 
     def get_all_times(self):
-        return sorted([t["_id"] for t in self.col_songs.find({}, {"_id": True})], reverse=True)
+        """
+        Returns all times for which a song is stored
+        Format is a time-object
+        """
+        return sorted([strptime(t["_id"], "%d.%m.%Y %H:%M:%S")
+                      for t in self.col_songs.find({}, {"_id": True})], reverse=True)
