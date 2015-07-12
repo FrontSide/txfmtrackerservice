@@ -24,10 +24,10 @@ class Cache:
 
         # First remove the song that has been the "playing_song"
         # from the storage if it was a TXFM Show rather than an actual song
+        # i.e. if there's no artist
         last_song = self.get_latest_songs(1)
-        ignore_pattern = re.compile("((nialler9[\s]?.*)|(txfm[\s]?.*))")
 
-        if ignore_pattern.match(last_song["title"].strip().lower()) and not last_song["artist"].strip():
+        if not last_song["artist"].strip():
             self.storage.delete(self.storage.lpop(self.TIMES_KEY))
 
         self.storage.lpush(self.TIMES_KEY, time)
