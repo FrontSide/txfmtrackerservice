@@ -4,11 +4,23 @@ A tiny app with which the Songs played on the Irish Independent Radio TXFM Dubli
 
 # Live on [www.txfmtrack.com](http://www.txfmtrack.com)
 
+## Now running with docker
+
 ######Built with Python, Redis, MongoDB, bottle.py and BeautifulSoup.
 
 ---
 
-## Recommended/Tested Setup
+## Setup with Docker (recommended)
+
+Install docker and docker compose and run 
+
+    docker-compose up -d
+
+This will start 3 docker containers (the txfmtrack app, redis and mongo) which are linked with each other.
+You can now access the service from the host machine (where the docker containers are running) on port 8585 (use the docker host IP address instead of "localhost" if you can't connect).
+Link your webserver on the host machine to this port to publish the service.
+
+## Setup without Docker
 
 Start a redis server on localhost with default port **6379**
 
