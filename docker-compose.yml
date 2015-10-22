@@ -1,0 +1,11 @@
+txfmtrack:
+  image: fr0ntside/txfmtrack
+  ports:
+    - "8585:80"
+  links:
+    - redis
+    - mongo
+redis:
+  image: redis
+mongo:
+  image: mongo
