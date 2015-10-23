@@ -5,6 +5,8 @@ txfmtrack:
   links:
     - redis
     - mongo
+  volumes:
+    - ./txfm-config:/var/www/txfmtrackservice-client/_config
 redis:
   image: redis
 mongo:

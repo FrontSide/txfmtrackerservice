@@ -20,7 +20,5 @@ RUN sed -i 's/root\s\+\/usr\/share\/nginx\/html;/root   \/var\/www\/txfmtrackser
 
 VOLUME /var/www/txfmtrackservice-client/_config
 
-ENTRYPOINT ln -s /var/www/txfmtrackservice-client/config/host.js /var/www/txfmtrackservice-client/_config/host.js \
-;service nginx start\
-;cron start\
-;gunicorn -w 4 -b 127.0.0.1:8384 web:app
+ENTRYPOINT cp /var/www/txfmtrackservice-client/config/host.js /var/www/txfmtrackservice-client/_config/host.js \
+;service nginx start; cron start; gunicorn -w 4 -b 127.0.0.1:8384 web:app
