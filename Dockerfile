@@ -1,15 +1,16 @@
 FROM nginx
 
 RUN apt-get update && apt-get install git cron python-pip -y
-RUN pip install gunicorn bottle pytz beautifulsoup4 redis pymongo
+RUN pip install gunicorn bottle
 
 WORKDIR /var/www
-RUN git clone -b v1 https://github.com/FrontSide/txfmtrackservice-client.git
+RUN git clone -b v1.1 https://github.com/FrontSide/txfmtrackservice-client.git
 
 WORKDIR /opt
-RUN git clone -b v1 https://github.com/FrontSide/txfmtrackservice.git
+RUN git clone -b v1.1 https://github.com/FrontSide/txfmtrackservice.git
 
 WORKDIR /opt/txfmtrackservice
+RUN pip install -r requirements.txt
 
 RUN cp -f ./config/nginx/default.conf /etc/nginx/conf.d/default.conf
 
