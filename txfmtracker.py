@@ -1,40 +1,40 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """
 TXFMTrackService
 (C) 2015
 David Rieger
+v1.1
 """
 
 import urllib.request
 import json
-from bs4 import BeautifulSoup
 from storagemanager import StorageManager
 
 
 def now_playing():
 
-    # I need to use that URL which was buried somewhere in their JS
-    URL = "http://www.txfm.ie/player/assets/includes/ajax/hp_grid_gen.php"
+    # New TXFM website has a nicer API that makes things much easier
+    URL = "http://www.txfm.ie/assets/includes/ajax/player_info.php?type=On+Air&currentstationID=11"
 
     # It returns a JSON which has a key called "data" which contains - get this - HTML
     jsonstr = urllib.request.urlopen(URL).readall().decode("UTF-8")
-    htmlpure = json.loads(jsonstr)["data"]
-    htmlsoup = BeautifulSoup(htmlpure)
+    onairinfo = json.loads(jsonstr)
 
-    # The tag where the songname is in doesn't have an id so
-    # let's keep our fingers crossed that this will work for a while...
+    # Try to obtain current song info from JSON response
     try:
-        nowplaying = htmlsoup.find_all("img", class_="tNowImg")[0]["title"]
+        artist = onairinfo["currentTitle"]
+        title = onairinfo["currentArtist"]
     except IndexError:
-        nowplaying = htmlsoup.find_all("h2", class_="tName white")[0].text
+        pass
 
-    try:
-        artist = nowplaying.split(" - ")[0].strip()
-        title = nowplaying.split(" - ")[1].strip()
-    except IndexError:
+    # If song info was not available - set show title as title
+    if not (artist or title):
         artist = ""
-        title = nowplaying
+        try:
+            title = onairinfo["title"]
+        except IndexError:
+            title = "ERROR RETRIEVING SONG INFO"
 
     return {"title": title, "artist": artist}
 
