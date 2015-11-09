@@ -23,13 +23,13 @@ def now_playing():
 
     # Try to obtain current song info from JSON response
     try:
-        artist = onairinfo["currentTitle"]
-        title = onairinfo["currentArtist"]
+        title = onairinfo["currentTitle"]
+        artist = onairinfo["currentArtist"]
     except IndexError:
         pass
 
-    # If song info was not available - set show title as title
-    if not (artist or title):
+    # If either song or title info not available - set show title as title
+    if not (artist and title):
         artist = ""
         try:
             title = onairinfo["title"]
