@@ -1,10 +1,13 @@
 FROM ubuntu:14.04
 
-RUN apt-get update && apt-get install python3 python3-pip cron nginx git -y
+RUN apt-get update && apt-get install python3 python3-pip cron nginx git wget -y
 RUN pip3 install gunicorn bottle
 
 WORKDIR /var/www
 RUN git clone https://github.com/FrontSide/txfmtrackservice-client.git
+
+RUN wget https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css -O /var/www/txfmtrackservice-client/bootstrap-datetimepicker.min.css
+RUN wget https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js -O /var/www/txfmtrackservice-client/bootstrap-datetimepicker.min.js
 
 WORKDIR /opt
 RUN git clone https://github.com/FrontSide/txfmtrackservice.git
