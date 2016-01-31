@@ -59,7 +59,10 @@ class Cache:
         for the latest song is returned i.e. no time
         """
         if amount is 1:
-            return self.get_song_for_key(self.get_times(amount=1)[0])
+            try:
+                return self.get_song_for_key(self.get_times(amount=1)[0])
+            except IndexError:
+                return {"artist": "None", "title": "None"}
 
         _times = self.get_times(amount)
         _all_songs = OrderedDict()
