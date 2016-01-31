@@ -12,7 +12,7 @@ A tiny app with which the Songs played on the Irish Independent Radio TXFM Dubli
 
 ## Setup with Docker (recommended)
 
-Install docker and docker compose and run 
+Install docker and docker compose and run
 
     docker-compose up -d
 

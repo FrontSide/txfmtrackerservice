@@ -4,7 +4,7 @@
 TXFMTrackService
 (C) 2015
 David Rieger
-v1.1
+v1.2
 """
 
 import urllib.request
