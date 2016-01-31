@@ -11,3 +11,5 @@ redis:
   image: redis
 mongo:
   image: mongo
+  volumes:
+    - ./.mongo:/var/lib/mongodb
