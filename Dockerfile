@@ -4,10 +4,10 @@ RUN apt-get update && apt-get install git cron python-pip -y
 RUN pip install gunicorn bottle
 
 WORKDIR /var/www
-RUN git clone -b v1.1 https://github.com/FrontSide/txfmtrackservice-client.git
+RUN git clone https://github.com/FrontSide/txfmtrackservice-client.git
 
 WORKDIR /opt
-RUN git clone -b v1.1 https://github.com/FrontSide/txfmtrackservice.git
+RUN git clone https://github.com/FrontSide/txfmtrackservice.git
 
 WORKDIR /opt/txfmtrackservice
 RUN pip install -r requirements.txt
