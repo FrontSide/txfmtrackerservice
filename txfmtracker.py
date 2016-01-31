@@ -17,8 +17,10 @@ def now_playing():
     # New TXFM website has a nicer API that makes things much easier
     URL = "http://www.txfm.ie/assets/includes/ajax/player_info.php?type=On+Air&currentstationID=11"
 
+    req = urllib.request.Request(url=URL, headers={'User-Agent': 'Mozilla/5.0'})
+
     # It returns a JSON which has a key called "data" which contains - get this - HTML
-    jsonstr = urllib.request.urlopen(URL).readall().decode("UTF-8")
+    jsonstr = urllib.request.urlopen(req).readall().decode("UTF-8")
     onairinfo = json.loads(jsonstr)
 
     # Try to obtain current song info from JSON response
@@ -26,6 +28,7 @@ def now_playing():
         title = onairinfo["currentTitle"]
         artist = onairinfo["currentArtist"]
     except IndexError:
+        print("API Error")
         pass
 
     # If either song or title info not available - set show title as title
