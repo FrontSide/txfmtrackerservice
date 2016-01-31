@@ -12,7 +12,7 @@ RUN git clone https://github.com/FrontSide/txfmtrackservice.git
 WORKDIR /opt/txfmtrackservice
 RUN pip3 install -r requirements.txt
 
-RUN cp -f ./config/nginx/default.conf /etc/nginx/conf.d/default.conf
+RUN cp -f ./config/nginx/default.conf /etc/nginx/sites-enabled/default
 
 RUN touch txfmtrack.log \
 && echo "* * * * * /opt/txfmtrackservice/txfmtracker.py && TXFM_MSG="OK $(date)" || TXFM_MSG="ERROR $(date)"; echo "$TXFM_MSG" >> /opt/txfmtrackservice/txfmtrack.log" > cron.tmp \
