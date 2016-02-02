@@ -2,6 +2,8 @@
 
 A tiny app with which the Songs played on the Irish Independent Radio TXFM Dublin (105.2) can be tracked.
 
+Version 1.2
+
 # Live on [www.txfmtrack.com](http://www.txfmtrack.com)
 
 ## Now running with docker
