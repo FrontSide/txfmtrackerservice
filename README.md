@@ -14,7 +14,7 @@ Version 1.2
 
 ## Setup with Docker (recommended)
 
-Install docker and docker compose and run 
+Install docker and docker compose and run
 
     docker-compose up -d
 

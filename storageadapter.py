@@ -13,7 +13,7 @@ from time import strptime, strftime
 
 class Cache:
 
-    def __init__(self, host="txfmtrackservice_redis_1", port="6379", db="0"):
+    def __init__(self, host="redis", port="6379", db="0"):
         self.storage = redis.StrictRedis(host=host, port=port, db=db)
         self.TIMES_KEY = "times"
 
@@ -59,7 +59,10 @@ class Cache:
         for the latest song is returned i.e. no time
         """
         if amount is 1:
-            return self.get_song_for_key(self.get_times(amount=1)[0])
+            try:
+                return self.get_song_for_key(self.get_times(amount=1)[0])
+            except IndexError:
+                return {"artist": "None", "title": "None"}
 
         _times = self.get_times(amount)
         _all_songs = OrderedDict()
@@ -120,7 +123,7 @@ class Cache:
 
 class Persistence:
 
-    def __init__(self, host="txfmtrackservice_mongo_1", port=27017, dbname="txfmstore"):
+    def __init__(self, host="mongo", port=27017, dbname="txfmstore"):
         self.db = MongoClient(host, port)[dbname]
         self.col_songs = self.db.songs
 

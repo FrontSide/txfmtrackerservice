@@ -1,18 +1,21 @@
-FROM nginx
+FROM ubuntu:14.04
 
-RUN apt-get update && apt-get install git cron python-pip -y
-RUN pip install gunicorn bottle
+RUN apt-get update && apt-get install python3 python3-pip cron nginx git wget -y
+RUN pip3 install gunicorn bottle
 
 WORKDIR /var/www
-RUN git clone -b v1.1 https://github.com/FrontSide/txfmtrackservice-client.git
+RUN git clone https://github.com/FrontSide/txfmtrackservice-client.git
+
+RUN wget https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css -O /var/www/txfmtrackservice-client/bootstrap-datetimepicker.min.css
+RUN wget https://raw.githubusercontent.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js -O /var/www/txfmtrackservice-client/bootstrap-datetimepicker.min.js
 
 WORKDIR /opt
-RUN git clone -b v1.1 https://github.com/FrontSide/txfmtrackservice.git
+RUN git clone https://github.com/FrontSide/txfmtrackservice.git
 
 WORKDIR /opt/txfmtrackservice
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-RUN cp -f ./config/nginx/default.conf /etc/nginx/conf.d/default.conf
+RUN cp -f ./config/nginx/default.conf /etc/nginx/sites-enabled/default
 
 RUN touch txfmtrack.log \
 && echo "* * * * * /opt/txfmtrackservice/txfmtracker.py && TXFM_MSG="OK $(date)" || TXFM_MSG="ERROR $(date)"; echo "$TXFM_MSG" >> /opt/txfmtrackservice/txfmtrack.log" > cron.tmp \

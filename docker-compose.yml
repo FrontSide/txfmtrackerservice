@@ -1,5 +1,5 @@
 txfmtrack:
-  image: fr0ntside/txfmtrack
+  build: .
   ports:
     - "8585:80"
   links:
@@ -11,3 +11,5 @@ redis:
   image: redis
 mongo:
   image: mongo
+  volumes:
+    - ./.mongo:/var/lib/mongodb
